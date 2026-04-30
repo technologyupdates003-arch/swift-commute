@@ -27,6 +27,8 @@ export type Database = {
           passenger_id_number: string | null
           passenger_name: string
           passenger_phone: string
+          seat_class: Database["public"]["Enums"]["seat_class"] | null
+          seat_id: string | null
           seat_number: number
           status: Database["public"]["Enums"]["booking_status"]
           ticket_code: string
@@ -44,6 +46,8 @@ export type Database = {
           passenger_id_number?: string | null
           passenger_name: string
           passenger_phone: string
+          seat_class?: Database["public"]["Enums"]["seat_class"] | null
+          seat_id?: string | null
           seat_number: number
           status?: Database["public"]["Enums"]["booking_status"]
           ticket_code?: string
@@ -61,6 +65,8 @@ export type Database = {
           passenger_id_number?: string | null
           passenger_name?: string
           passenger_phone?: string
+          seat_class?: Database["public"]["Enums"]["seat_class"] | null
+          seat_id?: string | null
           seat_number?: number
           status?: Database["public"]["Enums"]["booking_status"]
           ticket_code?: string
@@ -72,6 +78,13 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_seat_id_fkey"
+            columns: ["seat_id"]
+            isOneToOne: false
+            referencedRelation: "seats"
             referencedColumns: ["id"]
           },
           {
@@ -281,6 +294,95 @@ export type Database = {
           },
         ]
       }
+      seat_locks: {
+        Row: {
+          created_at: string
+          id: string
+          lock_expires_at: string
+          locked_by_session: string | null
+          locked_by_user: string | null
+          seat_id: string
+          trip_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lock_expires_at: string
+          locked_by_session?: string | null
+          locked_by_user?: string | null
+          seat_id: string
+          trip_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lock_expires_at?: string
+          locked_by_session?: string | null
+          locked_by_user?: string | null
+          seat_id?: string
+          trip_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seat_locks_seat_id_fkey"
+            columns: ["seat_id"]
+            isOneToOne: false
+            referencedRelation: "seats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seat_locks_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seats: {
+        Row: {
+          bus_id: string
+          class: Database["public"]["Enums"]["seat_class"]
+          col_index: number
+          created_at: string
+          id: string
+          is_active: boolean
+          price_multiplier: number
+          row_index: number
+          seat_number: string
+        }
+        Insert: {
+          bus_id: string
+          class?: Database["public"]["Enums"]["seat_class"]
+          col_index: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          price_multiplier?: number
+          row_index: number
+          seat_number: string
+        }
+        Update: {
+          bus_id?: string
+          class?: Database["public"]["Enums"]["seat_class"]
+          col_index?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          price_multiplier?: number
+          row_index?: number
+          seat_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seats_bus_id_fkey"
+            columns: ["bus_id"]
+            isOneToOne: false
+            referencedRelation: "buses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trips: {
         Row: {
           bus_id: string
@@ -373,6 +475,35 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      confirm_booking_payment: {
+        Args: { _booking_id: string; _session_token: string }
+        Returns: {
+          amount: number
+          commission_amount: number
+          company_id: string
+          created_at: string
+          created_by: string | null
+          discount_amount: number
+          discount_id: string | null
+          id: string
+          passenger_id_number: string | null
+          passenger_name: string
+          passenger_phone: string
+          seat_class: Database["public"]["Enums"]["seat_class"] | null
+          seat_id: string | null
+          seat_number: number
+          status: Database["public"]["Enums"]["booking_status"]
+          ticket_code: string
+          trip_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "bookings"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      expire_seat_locks: { Args: never; Returns: number }
       get_user_company: { Args: { _user_id: string }; Returns: string }
       has_company_role: {
         Args: {
@@ -390,6 +521,23 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      lock_seats: {
+        Args: {
+          _seat_ids: string[]
+          _session_token: string
+          _trip_id: string
+          _ttl_minutes?: number
+        }
+        Returns: {
+          lock_expires_at: string
+          lock_id: string
+          seat_id: string
+        }[]
+      }
+      release_seat_lock: {
+        Args: { _seat_id: string; _session_token: string; _trip_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role:
@@ -403,6 +551,7 @@ export type Database = {
       booking_status: "pending" | "paid" | "cancelled" | "refunded"
       bus_type: "vip" | "normal"
       discount_type: "percent" | "fixed"
+      seat_class: "economy" | "business" | "vip"
       trip_status: "scheduled" | "departed" | "completed" | "cancelled"
     }
     CompositeTypes: {
@@ -543,6 +692,7 @@ export const Constants = {
       booking_status: ["pending", "paid", "cancelled", "refunded"],
       bus_type: ["vip", "normal"],
       discount_type: ["percent", "fixed"],
+      seat_class: ["economy", "business", "vip"],
       trip_status: ["scheduled", "departed", "completed", "cancelled"],
     },
   },
