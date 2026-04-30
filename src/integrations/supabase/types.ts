@@ -96,6 +96,39 @@ export type Database = {
           },
         ]
       }
+      branches: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          phone: string | null
+          town: string
+          updated_at: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          phone?: string | null
+          town: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          phone?: string | null
+          town?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       buses: {
         Row: {
           bus_type: Database["public"]["Enums"]["bus_type"]
@@ -218,6 +251,160 @@ export type Database = {
         }
         Relationships: []
       }
+      parcel_movements: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          id: string
+          location: string | null
+          note: string | null
+          parcel_id: string
+          status: Database["public"]["Enums"]["parcel_status"]
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          location?: string | null
+          note?: string | null
+          parcel_id: string
+          status: Database["public"]["Enums"]["parcel_status"]
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          location?: string | null
+          note?: string | null
+          parcel_id?: string
+          status?: Database["public"]["Enums"]["parcel_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parcel_movements_parcel_id_fkey"
+            columns: ["parcel_id"]
+            isOneToOne: false
+            referencedRelation: "parcels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      parcel_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          mpesa_code: string | null
+          parcel_id: string
+          status: Database["public"]["Enums"]["parcel_payment_status"]
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          mpesa_code?: string | null
+          parcel_id: string
+          status?: Database["public"]["Enums"]["parcel_payment_status"]
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          mpesa_code?: string | null
+          parcel_id?: string
+          status?: Database["public"]["Enums"]["parcel_payment_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parcel_payments_parcel_id_fkey"
+            columns: ["parcel_id"]
+            isOneToOne: false
+            referencedRelation: "parcels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      parcels: {
+        Row: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          declared_value: number | null
+          description: string
+          destination_branch_id: string | null
+          id: string
+          is_urgent: boolean
+          origin_branch_id: string | null
+          payment_status: Database["public"]["Enums"]["parcel_payment_status"]
+          pickup_otp: string
+          price: number
+          quantity: number
+          receiver_name: string
+          receiver_phone: string
+          route_id: string
+          sender_id_number: string | null
+          sender_name: string
+          sender_phone: string
+          status: Database["public"]["Enums"]["parcel_status"]
+          tracking_id: string
+          trip_id: string | null
+          updated_at: string
+          weight_kg: number
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          declared_value?: number | null
+          description: string
+          destination_branch_id?: string | null
+          id?: string
+          is_urgent?: boolean
+          origin_branch_id?: string | null
+          payment_status?: Database["public"]["Enums"]["parcel_payment_status"]
+          pickup_otp: string
+          price?: number
+          quantity?: number
+          receiver_name: string
+          receiver_phone: string
+          route_id: string
+          sender_id_number?: string | null
+          sender_name: string
+          sender_phone: string
+          status?: Database["public"]["Enums"]["parcel_status"]
+          tracking_id: string
+          trip_id?: string | null
+          updated_at?: string
+          weight_kg?: number
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          declared_value?: number | null
+          description?: string
+          destination_branch_id?: string | null
+          id?: string
+          is_urgent?: boolean
+          origin_branch_id?: string | null
+          payment_status?: Database["public"]["Enums"]["parcel_payment_status"]
+          pickup_otp?: string
+          price?: number
+          quantity?: number
+          receiver_name?: string
+          receiver_phone?: string
+          route_id?: string
+          sender_id_number?: string | null
+          sender_name?: string
+          sender_phone?: string
+          status?: Database["public"]["Enums"]["parcel_status"]
+          tracking_id?: string
+          trip_id?: string | null
+          updated_at?: string
+          weight_kg?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company_id: string | null
@@ -255,6 +442,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      route_parcel_pricing: {
+        Row: {
+          base_fee: number
+          company_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          per_kg: number
+          route_id: string
+          updated_at: string
+          urgent_surcharge: number
+        }
+        Insert: {
+          base_fee?: number
+          company_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          per_kg?: number
+          route_id: string
+          updated_at?: string
+          urgent_surcharge?: number
+        }
+        Update: {
+          base_fee?: number
+          company_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          per_kg?: number
+          route_id?: string
+          updated_at?: string
+          urgent_surcharge?: number
+        }
+        Relationships: []
       }
       routes: {
         Row: {
@@ -503,7 +726,58 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      create_parcel: {
+        Args: {
+          _declared_value: number
+          _description: string
+          _destination_branch: string
+          _is_urgent: boolean
+          _origin_branch: string
+          _quantity: number
+          _receiver_name: string
+          _receiver_phone: string
+          _route_id: string
+          _sender_id: string
+          _sender_name: string
+          _sender_phone: string
+          _trip_id?: string
+          _weight: number
+        }
+        Returns: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          declared_value: number | null
+          description: string
+          destination_branch_id: string | null
+          id: string
+          is_urgent: boolean
+          origin_branch_id: string | null
+          payment_status: Database["public"]["Enums"]["parcel_payment_status"]
+          pickup_otp: string
+          price: number
+          quantity: number
+          receiver_name: string
+          receiver_phone: string
+          route_id: string
+          sender_id_number: string | null
+          sender_name: string
+          sender_phone: string
+          status: Database["public"]["Enums"]["parcel_status"]
+          tracking_id: string
+          trip_id: string | null
+          updated_at: string
+          weight_kg: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "parcels"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       expire_seat_locks: { Args: never; Returns: number }
+      generate_parcel_tracking_id: { Args: never; Returns: string }
       get_user_company: { Args: { _user_id: string }; Returns: string }
       has_company_role: {
         Args: {
@@ -520,6 +794,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_company_staff: {
+        Args: { _company: string; _user: string }
+        Returns: boolean
+      }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       lock_seats: {
         Args: {
@@ -534,9 +812,120 @@ export type Database = {
           seat_id: string
         }[]
       }
+      mark_parcel_paid: {
+        Args: { _mpesa_code: string; _parcel_id: string }
+        Returns: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          declared_value: number | null
+          description: string
+          destination_branch_id: string | null
+          id: string
+          is_urgent: boolean
+          origin_branch_id: string | null
+          payment_status: Database["public"]["Enums"]["parcel_payment_status"]
+          pickup_otp: string
+          price: number
+          quantity: number
+          receiver_name: string
+          receiver_phone: string
+          route_id: string
+          sender_id_number: string | null
+          sender_name: string
+          sender_phone: string
+          status: Database["public"]["Enums"]["parcel_status"]
+          tracking_id: string
+          trip_id: string | null
+          updated_at: string
+          weight_kg: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "parcels"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       release_seat_lock: {
         Args: { _seat_id: string; _session_token: string; _trip_id: string }
         Returns: undefined
+      }
+      track_parcel: { Args: { _tracking_id: string }; Returns: Json }
+      update_parcel_status: {
+        Args: {
+          _location?: string
+          _new_status: Database["public"]["Enums"]["parcel_status"]
+          _note?: string
+          _parcel_id: string
+        }
+        Returns: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          declared_value: number | null
+          description: string
+          destination_branch_id: string | null
+          id: string
+          is_urgent: boolean
+          origin_branch_id: string | null
+          payment_status: Database["public"]["Enums"]["parcel_payment_status"]
+          pickup_otp: string
+          price: number
+          quantity: number
+          receiver_name: string
+          receiver_phone: string
+          route_id: string
+          sender_id_number: string | null
+          sender_name: string
+          sender_phone: string
+          status: Database["public"]["Enums"]["parcel_status"]
+          tracking_id: string
+          trip_id: string | null
+          updated_at: string
+          weight_kg: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "parcels"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      verify_parcel_pickup: {
+        Args: { _otp: string; _parcel_id: string }
+        Returns: {
+          company_id: string
+          created_at: string
+          created_by: string | null
+          declared_value: number | null
+          description: string
+          destination_branch_id: string | null
+          id: string
+          is_urgent: boolean
+          origin_branch_id: string | null
+          payment_status: Database["public"]["Enums"]["parcel_payment_status"]
+          pickup_otp: string
+          price: number
+          quantity: number
+          receiver_name: string
+          receiver_phone: string
+          route_id: string
+          sender_id_number: string | null
+          sender_name: string
+          sender_phone: string
+          status: Database["public"]["Enums"]["parcel_status"]
+          tracking_id: string
+          trip_id: string | null
+          updated_at: string
+          weight_kg: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "parcels"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {
@@ -551,6 +940,16 @@ export type Database = {
       booking_status: "pending" | "paid" | "cancelled" | "refunded"
       bus_type: "vip" | "normal"
       discount_type: "percent" | "fixed"
+      parcel_payment_status: "pending" | "paid" | "failed" | "refunded"
+      parcel_status:
+        | "created"
+        | "paid"
+        | "dispatched"
+        | "in_transit"
+        | "arrived"
+        | "ready_for_pickup"
+        | "delivered"
+        | "cancelled"
       seat_class: "economy" | "business" | "vip"
       trip_status: "scheduled" | "departed" | "completed" | "cancelled"
     }
@@ -692,6 +1091,17 @@ export const Constants = {
       booking_status: ["pending", "paid", "cancelled", "refunded"],
       bus_type: ["vip", "normal"],
       discount_type: ["percent", "fixed"],
+      parcel_payment_status: ["pending", "paid", "failed", "refunded"],
+      parcel_status: [
+        "created",
+        "paid",
+        "dispatched",
+        "in_transit",
+        "arrived",
+        "ready_for_pickup",
+        "delivered",
+        "cancelled",
+      ],
       seat_class: ["economy", "business", "vip"],
       trip_status: ["scheduled", "departed", "completed", "cancelled"],
     },

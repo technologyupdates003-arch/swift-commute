@@ -16,6 +16,8 @@ import CompanyDashboard from "./pages/CompanyDashboard.tsx";
 import PrintTicket from "./pages/PrintTicket.tsx";
 import ContactUs from "./pages/ContactUs.tsx";
 import Offers from "./pages/Offers.tsx";
+import SendParcel from "./pages/SendParcel.tsx";
+import TrackParcel from "./pages/TrackParcel.tsx";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ const App = () => (
             <Route path="/print-ticket" element={<PrintTicket />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/offers" element={<Offers />} />
+            <Route path="/send-parcel" element={<SendParcel />} />
+            <Route path="/track-parcel" element={<TrackParcel />} />
             <Route path="/admin" element={<RequireRole roles={["super_admin"]}><AdminDashboard /></RequireRole>} />
             <Route path="/company" element={<RequireRole roles={["company_admin","cashier","parcel_clerk","driver","conductor"]}><CompanyDashboard /></RequireRole>} />
             <Route path="*" element={<NotFound />} />

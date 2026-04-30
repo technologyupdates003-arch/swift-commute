@@ -4,6 +4,10 @@ import { Bus, Map, CalendarClock, Ticket } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import DiscountsManager from "@/components/admin/DiscountsManager";
 import BusLayoutEditor from "@/components/admin/BusLayoutEditor";
+import ParcelsManager from "@/components/admin/ParcelsManager";
+import BranchesManager from "@/components/admin/BranchesManager";
+import RoutePricingManager from "@/components/admin/RoutePricingManager";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CompanyDashboard = () => {
   const { companyId } = useAuth();
@@ -25,10 +29,27 @@ const CompanyDashboard = () => {
         </div>
 
         {companyId ? (
-          <>
-            <BusLayoutEditor companyId={companyId} />
-            <DiscountsManager companyId={companyId} />
-          </>
+          <Tabs defaultValue="bookings" className="w-full">
+            <TabsList>
+              <TabsTrigger value="bookings">Bookings & seats</TabsTrigger>
+              <TabsTrigger value="discounts">Discounts</TabsTrigger>
+              <TabsTrigger value="parcels">Parcels</TabsTrigger>
+              <TabsTrigger value="branches">Branches & pricing</TabsTrigger>
+            </TabsList>
+            <TabsContent value="bookings" className="mt-6">
+              <BusLayoutEditor companyId={companyId} />
+            </TabsContent>
+            <TabsContent value="discounts" className="mt-6">
+              <DiscountsManager companyId={companyId} />
+            </TabsContent>
+            <TabsContent value="parcels" className="mt-6">
+              <ParcelsManager companyId={companyId} />
+            </TabsContent>
+            <TabsContent value="branches" className="mt-6 space-y-6">
+              <BranchesManager companyId={companyId} />
+              <RoutePricingManager companyId={companyId} />
+            </TabsContent>
+          </Tabs>
         ) : (
           <Card><CardContent className="p-6 text-sm text-muted-foreground">
             Your account isn't linked to a company yet. Ask the super admin to assign you.
