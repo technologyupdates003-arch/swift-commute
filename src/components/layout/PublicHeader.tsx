@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Briefcase, LogIn, LogOut, LayoutDashboard, User } from "lucide-react";
+import { Bus, LogOut, LayoutDashboard, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -10,7 +10,9 @@ const PublicHeader = () => {
 
   const dashboardPath = hasRole("super_admin")
     ? "/admin"
-    : hasRole("company_admin")
+    : hasRole("cashier")
+    ? "/cashier"
+    : hasRole("company_admin") || hasRole("parcel_clerk") || hasRole("driver") || hasRole("conductor")
     ? "/company"
     : "/account";
 
@@ -23,15 +25,14 @@ const PublicHeader = () => {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="container flex h-[72px] items-center justify-between gap-6">
-        {/* Logo: red suitcase mark + travler-style wordmark */}
-        <Link to="/" className="flex items-center gap-2" aria-label="RoadLink home">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-sm">
-            <Briefcase className="h-5 w-5" strokeWidth={2.5} />
-            <span className="absolute -top-1 left-1/2 h-1.5 w-3 -translate-x-1/2 rounded-t-sm bg-primary" />
+        {/* Logo: Abancool Travel */}
+        <Link to="/" className="flex items-center gap-2" aria-label="Abancool Travel home">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gradient text-primary-foreground shadow-elegant">
+            <Bus className="h-5 w-5" strokeWidth={2.5} />
           </div>
-          <span className="text-2xl font-extrabold tracking-tight">
-            <span className="text-primary">R</span>
-            <span className="text-secondary">oadLink</span>
+          <span className="text-2xl font-extrabold tracking-tight leading-none">
+            <span className="text-primary">Abancool</span>{" "}
+            <span className="text-secondary">Travel</span>
           </span>
         </Link>
 
