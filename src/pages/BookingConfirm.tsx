@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { CheckCircle2, Clock } from "lucide-react";
+import { getSessionToken } from "@/lib/sessionToken";
 
 const BookingConfirm = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,7 +19,7 @@ const BookingConfirm = () => {
     (async () => {
       const { data } = await supabase
         .from("bookings")
-        .select("id, ticket_code, status, seat_number, amount, passenger_name, passenger_phone, trips(departure_at, routes(origin,destination)), companies(name)")
+        .select("id, ticket_code, status, seat_id, seat_class, seat_number, amount, passenger_name, passenger_phone, trips(departure_at, routes(origin,destination)), companies(name)")
         .eq("id", id)
         .maybeSingle();
       setBooking(data);
@@ -28,15 +29,19 @@ const BookingConfirm = () => {
   const simulatePayment = async () => {
     if (!booking) return;
     setPaying(true);
-    // Stub: just mark as paid. Real M-Pesa STK push would go through an edge function.
-    const { error } = await supabase.from("bookings").update({ status: "paid" }).eq("id", booking.id);
+    // Stub: real M-Pesa STK push would go through an edge function;
+    // this RPC verifies the seat lock atomically and marks the booking paid.
+    const { data, error } = await supabase.rpc("confirm_booking_payment", {
+      _booking_id: booking.id,
+      _session_token: getSessionToken(),
+    });
     setPaying(false);
     if (error) {
       toast({ title: "Payment failed", description: error.message, variant: "destructive" });
       return;
     }
-    toast({ title: "Payment confirmed", description: "Ticket marked as paid (stub)." });
-    setBooking({ ...booking, status: "paid" });
+    toast({ title: "Payment confirmed", description: "Seat is now booked." });
+    setBooking({ ...booking, ...(data ?? {}) });
   };
 
   if (!booking) {
@@ -49,6 +54,9 @@ const BookingConfirm = () => {
   }
 
   const isPaid = booking.status === "paid";
+  const seatLabel = booking.seat_class
+    ? `${booking.seat_number} • ${String(booking.seat_class).toUpperCase()}`
+    : `#${booking.seat_number}`;
 
   return (
     <div className="min-h-screen bg-muted/20">
@@ -66,7 +74,7 @@ const BookingConfirm = () => {
             <Row k="Operator" v={booking.companies?.name ?? "—"} />
             <Row k="Route" v={`${booking.trips?.routes?.origin ?? ""} → ${booking.trips?.routes?.destination ?? ""}`} />
             <Row k="Departure" v={booking.trips?.departure_at ? new Date(booking.trips.departure_at).toLocaleString() : "—"} />
-            <Row k="Seat" v={`#${booking.seat_number}`} />
+            <Row k="Seat" v={seatLabel} />
             <Row k="Passenger" v={booking.passenger_name} />
             <Row k="Phone" v={booking.passenger_phone} />
             <Row k="Amount" v={`KES ${Number(booking.amount).toLocaleString()}`} />

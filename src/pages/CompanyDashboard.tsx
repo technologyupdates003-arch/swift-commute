@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bus, Map, CalendarClock, Ticket } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import DiscountsManager from "@/components/admin/DiscountsManager";
+import BusLayoutEditor from "@/components/admin/BusLayoutEditor";
 
 const CompanyDashboard = () => {
   const { companyId } = useAuth();
@@ -13,7 +14,7 @@ const CompanyDashboard = () => {
       <div className="container space-y-8 py-8">
         <div>
           <h1 className="text-3xl font-bold">Company dashboard</h1>
-          <p className="mt-2 text-muted-foreground">Manage fleet, routes, schedules, bookings and your discount codes.</p>
+          <p className="mt-2 text-muted-foreground">Manage fleet, routes, schedules, bookings, seat layouts and your discount codes.</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -24,7 +25,10 @@ const CompanyDashboard = () => {
         </div>
 
         {companyId ? (
-          <DiscountsManager companyId={companyId} />
+          <>
+            <BusLayoutEditor companyId={companyId} />
+            <DiscountsManager companyId={companyId} />
+          </>
         ) : (
           <Card><CardContent className="p-6 text-sm text-muted-foreground">
             Your account isn't linked to a company yet. Ask the super admin to assign you.
