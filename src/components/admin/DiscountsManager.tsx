@@ -30,12 +30,13 @@ type Row = {
   is_active: boolean;
 };
 
-const empty = { code: "", description: "", type: "percent" as const, value: 10, max_uses: "", starts_at: "", ends_at: "" };
+type FormState = { code: string; description: string; type: "percent" | "fixed"; value: number; max_uses: string; starts_at: string; ends_at: string };
+const empty: FormState = { code: "", description: "", type: "percent", value: 10, max_uses: "", starts_at: "", ends_at: "" };
 
 const DiscountsManager = ({ companyId }: { companyId: string }) => {
   const [rows, setRows] = useState<Row[]>([]);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<typeof empty>(empty);
+  const [form, setForm] = useState<FormState>(empty);
   const [busy, setBusy] = useState(false);
 
   const load = async () => {
