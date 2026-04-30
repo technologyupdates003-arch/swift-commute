@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          after: Json | null
+          before: Json | null
+          company_id: string | null
+          created_at: string
+          entity: string
+          entity_id: string | null
+          id: string
+          meta: Json | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          after?: Json | null
+          before?: Json | null
+          company_id?: string | null
+          created_at?: string
+          entity: string
+          entity_id?: string | null
+          id?: string
+          meta?: Json | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          after?: Json | null
+          before?: Json | null
+          company_id?: string | null
+          created_at?: string
+          entity?: string
+          entity_id?: string | null
+          id?: string
+          meta?: Json | null
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           amount: number
@@ -811,6 +850,16 @@ export type Database = {
           lock_id: string
           seat_id: string
         }[]
+      }
+      log_admin_action: {
+        Args: {
+          _action: string
+          _company_id?: string
+          _entity: string
+          _entity_id: string
+          _meta?: Json
+        }
+        Returns: undefined
       }
       mark_parcel_paid: {
         Args: { _mpesa_code: string; _parcel_id: string }
