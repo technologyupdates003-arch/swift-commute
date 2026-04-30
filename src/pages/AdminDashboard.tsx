@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import PublicHeader from "@/components/layout/PublicHeader";
+import DashboardShell, { DashNavItem } from "@/components/layout/DashboardShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,28 +28,30 @@ type Company = {
   is_active: boolean; commission_pct: number;
 };
 
+const adminNav: DashNavItem[] = [
+  { to: "/admin", label: "Overview", icon: BarChart3, end: true },
+  { to: "/", label: "Public site", icon: Building2 },
+];
+
 const AdminDashboard = () => {
   return (
-    <div className="min-h-screen bg-muted/20">
-      <PublicHeader />
-      <div className="container py-8">
-        <div>
-          <h1 className="text-3xl font-bold">Super admin · Control center</h1>
-          <p className="mt-1 text-muted-foreground">Manage tenants, monitor revenue, and review platform activity.</p>
-        </div>
-
-        <Tabs defaultValue="companies" className="mt-6">
-          <TabsList>
-            <TabsTrigger value="companies"><Building2 className="mr-1.5 h-4 w-4" />Companies</TabsTrigger>
-            <TabsTrigger value="revenue"><BarChart3 className="mr-1.5 h-4 w-4" />Revenue & analytics</TabsTrigger>
-            <TabsTrigger value="audit"><ScrollText className="mr-1.5 h-4 w-4" />Audit logs</TabsTrigger>
-          </TabsList>
-          <TabsContent value="companies" className="mt-6"><CompaniesTab /></TabsContent>
-          <TabsContent value="revenue" className="mt-6"><RevenueTab /></TabsContent>
-          <TabsContent value="audit" className="mt-6"><AuditTab /></TabsContent>
-        </Tabs>
+    <DashboardShell title="Super admin" subtitle="Control center" nav={adminNav}>
+      <div>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Super admin · Control center</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Manage tenants, monitor revenue, and review platform activity.</p>
       </div>
-    </div>
+
+      <Tabs defaultValue="companies" className="mt-6">
+        <TabsList className="flex-wrap h-auto">
+          <TabsTrigger value="companies"><Building2 className="mr-1.5 h-4 w-4" />Companies</TabsTrigger>
+          <TabsTrigger value="revenue"><BarChart3 className="mr-1.5 h-4 w-4" />Revenue & analytics</TabsTrigger>
+          <TabsTrigger value="audit"><ScrollText className="mr-1.5 h-4 w-4" />Audit logs</TabsTrigger>
+        </TabsList>
+        <TabsContent value="companies" className="mt-6"><CompaniesTab /></TabsContent>
+        <TabsContent value="revenue" className="mt-6"><RevenueTab /></TabsContent>
+        <TabsContent value="audit" className="mt-6"><AuditTab /></TabsContent>
+      </Tabs>
+    </DashboardShell>
   );
 };
 
