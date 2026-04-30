@@ -99,7 +99,7 @@ const DiscountsManager = ({ companyId }: { companyId: string }) => {
               <Field label="Code" v={form.code} on={(v) => setForm({ ...form, code: v.toUpperCase() })} placeholder="BUSCAR26" />
               <div className="space-y-1.5">
                 <Label>Type</Label>
-                <Select value={form.type} onValueChange={(v: "percent" | "fixed") => setForm({ ...form, type: v })}>
+                <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v as "percent" | "fixed" })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="percent">Percent (%)</SelectItem>

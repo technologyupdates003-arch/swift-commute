@@ -42,13 +42,20 @@ const Index = () => {
         supabase.from("routes").select("*", { count: "exact", head: true }).eq("is_active", true),
         supabase
           .from("discounts")
-          .select("id, code, description, type, value, company_id, companies(name, slug)")
+          .select("id, code, description, type, value, company_id")
           .eq("is_active", true)
           .order("created_at", { ascending: false })
           .limit(8),
       ]);
       setStats({ companies: c ?? 0, routes: r ?? 0 });
-      setOffers((d as DiscountRow[]) ?? []);
+      const base = (d ?? []) as Omit<DiscountRow, "companies">[];
+      const ids = Array.from(new Set(base.map((x) => x.company_id)));
+      let names: Record<string, { name: string; slug: string }> = {};
+      if (ids.length) {
+        const { data: cs } = await supabase.from("companies").select("id, name, slug").in("id", ids);
+        names = Object.fromEntries((cs ?? []).map((x) => [x.id, { name: x.name, slug: x.slug }]));
+      }
+      setOffers(base.map((x) => ({ ...x, companies: names[x.company_id] ?? null })));
     })();
   }, []);
 

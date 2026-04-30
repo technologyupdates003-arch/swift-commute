@@ -13,11 +13,20 @@ type Row = {
 const Offers = () => {
   const [rows, setRows] = useState<Row[]>([]);
   useEffect(() => {
-    supabase.from("discounts")
-      .select("id, code, description, type, value, ends_at, companies(name)")
-      .eq("is_active", true)
-      .order("created_at", { ascending: false })
-      .then(({ data }) => setRows((data as Row[]) ?? []));
+    (async () => {
+      const { data } = await supabase.from("discounts")
+        .select("id, code, description, type, value, ends_at, company_id")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
+      const base = (data ?? []) as (Omit<Row, "companies"> & { company_id: string })[];
+      const ids = Array.from(new Set(base.map((x) => x.company_id)));
+      let names: Record<string, { name: string }> = {};
+      if (ids.length) {
+        const { data: cs } = await supabase.from("companies").select("id, name").in("id", ids);
+        names = Object.fromEntries((cs ?? []).map((x) => [x.id, { name: x.name }]));
+      }
+      setRows(base.map((x) => ({ ...x, companies: names[x.company_id] ?? null })));
+    })();
   }, []);
 
   return (
