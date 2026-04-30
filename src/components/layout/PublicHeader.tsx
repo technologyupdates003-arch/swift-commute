@@ -37,6 +37,8 @@ const PublicHeader = () => {
 
         <nav className="hidden items-center gap-1 md:flex">
           <NavLink to="/offers" className={linkCls}>Offers</NavLink>
+          <NavLink to="/send-parcel" className={linkCls}>Send Parcel</NavLink>
+          <NavLink to="/track-parcel" className={linkCls}>Track Parcel</NavLink>
           <NavLink to="/print-ticket" className={linkCls}>Print Ticket</NavLink>
           <NavLink to="/contact-us" className={linkCls}>Need Help?</NavLink>
           <NavLink to="/blog" className={linkCls}>Blog</NavLink>
