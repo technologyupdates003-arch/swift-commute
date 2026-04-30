@@ -31,6 +31,7 @@ async function routeAfterLogin(userId: string, navigate: (p: string) => void) {
   const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
   const roles = (data ?? []).map((r) => r.role as AppRole);
   if (roles.includes("super_admin")) return navigate("/admin");
+  if (roles.includes("cashier")) return navigate("/cashier");
   if (roles.some((r) => STAFF_ROLES.includes(r))) return navigate("/company");
   navigate("/");
 }
@@ -95,7 +96,7 @@ const Auth = () => {
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-brand-gradient text-primary-foreground">
               <Bus className="h-6 w-6" />
             </div>
-            <CardTitle className="text-2xl">Welcome to RoadLink</CardTitle>
+            <CardTitle className="text-2xl">Welcome to Abancool Travel</CardTitle>
             <CardDescription>Sign in or create an account to manage bookings and parcels.</CardDescription>
           </CardHeader>
           <CardContent>
