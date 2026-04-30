@@ -13,6 +13,9 @@ import Book from "./pages/Book.tsx";
 import BookingConfirm from "./pages/BookingConfirm.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import CompanyDashboard from "./pages/CompanyDashboard.tsx";
+import PrintTicket from "./pages/PrintTicket.tsx";
+import ContactUs from "./pages/ContactUs.tsx";
+import Offers from "./pages/Offers.tsx";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +32,9 @@ const App = () => (
             <Route path="/search" element={<Search />} />
             <Route path="/book/:tripId" element={<Book />} />
             <Route path="/booking/:id" element={<BookingConfirm />} />
+            <Route path="/print-ticket" element={<PrintTicket />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/offers" element={<Offers />} />
             <Route path="/admin" element={<RequireRole roles={["super_admin"]}><AdminDashboard /></RequireRole>} />
             <Route path="/company" element={<RequireRole roles={["company_admin","cashier","parcel_clerk","driver","conductor"]}><CompanyDashboard /></RequireRole>} />
             <Route path="*" element={<NotFound />} />
