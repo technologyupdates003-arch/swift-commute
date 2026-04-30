@@ -18,6 +18,7 @@ import ContactUs from "./pages/ContactUs.tsx";
 import Offers from "./pages/Offers.tsx";
 import SendParcel from "./pages/SendParcel.tsx";
 import TrackParcel from "./pages/TrackParcel.tsx";
+import Cashier from "./pages/Cashier.tsx";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/track-parcel" element={<TrackParcel />} />
             <Route path="/admin" element={<RequireRole roles={["super_admin"]}><AdminDashboard /></RequireRole>} />
             <Route path="/company" element={<RequireRole roles={["company_admin","cashier","parcel_clerk","driver","conductor"]}><CompanyDashboard /></RequireRole>} />
+            <Route path="/cashier" element={<RequireRole roles={["cashier","company_admin","super_admin"]}><Cashier /></RequireRole>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
