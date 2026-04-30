@@ -17,9 +17,12 @@ export type Database = {
       bookings: {
         Row: {
           amount: number
+          commission_amount: number
           company_id: string
           created_at: string
           created_by: string | null
+          discount_amount: number
+          discount_id: string | null
           id: string
           passenger_id_number: string | null
           passenger_name: string
@@ -31,9 +34,12 @@ export type Database = {
         }
         Insert: {
           amount: number
+          commission_amount?: number
           company_id: string
           created_at?: string
           created_by?: string | null
+          discount_amount?: number
+          discount_id?: string | null
           id?: string
           passenger_id_number?: string | null
           passenger_name: string
@@ -45,9 +51,12 @@ export type Database = {
         }
         Update: {
           amount?: number
+          commission_amount?: number
           company_id?: string
           created_at?: string
           created_by?: string | null
+          discount_amount?: number
+          discount_id?: string | null
           id?: string
           passenger_id_number?: string | null
           passenger_name?: string
@@ -114,6 +123,7 @@ export type Database = {
       }
       companies: {
         Row: {
+          commission_pct: number
           contact_email: string | null
           contact_phone: string | null
           created_at: string
@@ -124,6 +134,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          commission_pct?: number
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
@@ -134,6 +145,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          commission_pct?: number
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
@@ -142,6 +154,54 @@ export type Database = {
           name?: string
           slug?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      discounts: {
+        Row: {
+          code: string
+          company_id: string
+          created_at: string
+          description: string | null
+          ends_at: string | null
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          starts_at: string | null
+          type: Database["public"]["Enums"]["discount_type"]
+          updated_at: string
+          used_count: number
+          value: number
+        }
+        Insert: {
+          code: string
+          company_id: string
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          starts_at?: string | null
+          type?: Database["public"]["Enums"]["discount_type"]
+          updated_at?: string
+          used_count?: number
+          value: number
+        }
+        Update: {
+          code?: string
+          company_id?: string
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          starts_at?: string | null
+          type?: Database["public"]["Enums"]["discount_type"]
+          updated_at?: string
+          used_count?: number
+          value?: number
         }
         Relationships: []
       }
@@ -342,6 +402,7 @@ export type Database = {
         | "customer"
       booking_status: "pending" | "paid" | "cancelled" | "refunded"
       bus_type: "vip" | "normal"
+      discount_type: "percent" | "fixed"
       trip_status: "scheduled" | "departed" | "completed" | "cancelled"
     }
     CompositeTypes: {
@@ -481,6 +542,7 @@ export const Constants = {
       ],
       booking_status: ["pending", "paid", "cancelled", "refunded"],
       bus_type: ["vip", "normal"],
+      discount_type: ["percent", "fixed"],
       trip_status: ["scheduled", "departed", "completed", "cancelled"],
     },
   },
