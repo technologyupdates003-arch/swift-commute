@@ -1,11 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bus, Map, CalendarClock, Ticket, LayoutDashboard, Tag, Package, Building2 } from "lucide-react";
+import { Bus, Map, CalendarClock, Ticket, LayoutDashboard, Tag, Package, Building2, Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import DiscountsManager from "@/components/admin/DiscountsManager";
 import BusLayoutEditor from "@/components/admin/BusLayoutEditor";
 import ParcelsManager from "@/components/admin/ParcelsManager";
 import BranchesManager from "@/components/admin/BranchesManager";
 import RoutePricingManager from "@/components/admin/RoutePricingManager";
+import StaffManager from "@/components/admin/StaffManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardShell, { DashNavItem } from "@/components/layout/DashboardShell";
 import { Link } from "react-router-dom";
@@ -52,12 +53,16 @@ const CompanyDashboard = () => {
           <Tabs defaultValue="bookings" className="w-full">
             <TabsList className="flex-wrap h-auto">
               <TabsTrigger value="bookings"><Bus className="mr-1.5 h-4 w-4" />Fleet & seats</TabsTrigger>
+              <TabsTrigger value="staff"><Users className="mr-1.5 h-4 w-4" />Staff</TabsTrigger>
               <TabsTrigger value="discounts"><Tag className="mr-1.5 h-4 w-4" />Discounts</TabsTrigger>
               <TabsTrigger value="parcels"><Package className="mr-1.5 h-4 w-4" />Parcels</TabsTrigger>
               <TabsTrigger value="branches"><Building2 className="mr-1.5 h-4 w-4" />Branches & pricing</TabsTrigger>
             </TabsList>
             <TabsContent value="bookings" className="mt-6">
               <BusLayoutEditor companyId={companyId} />
+            </TabsContent>
+            <TabsContent value="staff" className="mt-6">
+              <StaffManager companyId={companyId} />
             </TabsContent>
             <TabsContent value="discounts" className="mt-6">
               <DiscountsManager companyId={companyId} />
