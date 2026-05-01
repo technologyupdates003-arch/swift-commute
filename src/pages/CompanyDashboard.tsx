@@ -1,24 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bus, Map, CalendarClock, Ticket, LayoutDashboard, Tag, Package, Building2, Users } from "lucide-react";
+import { Bus, Map, CalendarClock, Ticket, Tag, Package, Building2, Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import DiscountsManager from "@/components/admin/DiscountsManager";
-import BusLayoutEditor from "@/components/admin/BusLayoutEditor";
 import ParcelsManager from "@/components/admin/ParcelsManager";
 import BranchesManager from "@/components/admin/BranchesManager";
 import RoutePricingManager from "@/components/admin/RoutePricingManager";
 import StaffManager from "@/components/admin/StaffManager";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DashboardShell, { DashNavItem } from "@/components/layout/DashboardShell";
+import DashboardShell from "@/components/layout/DashboardShell";
+import { companyNav } from "@/components/layout/companyNav";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
-const nav: DashNavItem[] = [
-  { to: "/company", label: "Overview", icon: LayoutDashboard, end: true },
-  { to: "/cashier", label: "Sell ticket", icon: Ticket },
-  { to: "/track-parcel", label: "Track parcel", icon: Package },
-  { to: "/send-parcel", label: "New parcel", icon: Package },
-  { to: "/", label: "Public site", icon: Bus },
-];
 
 const CompanyDashboard = () => {
   const { companyId } = useAuth();
@@ -27,7 +19,7 @@ const CompanyDashboard = () => {
     <DashboardShell
       title="Company"
       subtitle="Operations control"
-      nav={nav}
+      nav={companyNav}
       actions={
         <Link to="/cashier">
           <Button size="sm" className="gap-1.5 bg-brand-gradient hover:opacity-90 hidden sm:inline-flex">
@@ -43,24 +35,20 @@ const CompanyDashboard = () => {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Tile icon={<Bus className="h-5 w-5" />} title="Fleet" desc="Buses & layouts" />
-          <Tile icon={<Map className="h-5 w-5" />} title="Routes" desc="Origin → destination" />
-          <Tile icon={<CalendarClock className="h-5 w-5" />} title="Trips" desc="Daily schedules" />
-          <Tile icon={<Ticket className="h-5 w-5" />} title="Bookings" desc="Live seat sales" />
+          <Tile to="/company/fleet" icon={<Bus className="h-5 w-5" />} title="Fleet" desc="Buses & layouts" />
+          <Tile to="/company/routes" icon={<Map className="h-5 w-5" />} title="Routes" desc="Origin → destination" />
+          <Tile to="/company/trips" icon={<CalendarClock className="h-5 w-5" />} title="Trips" desc="Daily schedules" />
+          <Tile to="/company/bookings" icon={<Ticket className="h-5 w-5" />} title="Bookings" desc="Live seat sales" />
         </div>
 
         {companyId ? (
-          <Tabs defaultValue="bookings" className="w-full">
+          <Tabs defaultValue="staff" className="w-full">
             <TabsList className="flex-wrap h-auto">
-              <TabsTrigger value="bookings"><Bus className="mr-1.5 h-4 w-4" />Fleet & seats</TabsTrigger>
               <TabsTrigger value="staff"><Users className="mr-1.5 h-4 w-4" />Staff</TabsTrigger>
               <TabsTrigger value="discounts"><Tag className="mr-1.5 h-4 w-4" />Discounts</TabsTrigger>
               <TabsTrigger value="parcels"><Package className="mr-1.5 h-4 w-4" />Parcels</TabsTrigger>
               <TabsTrigger value="branches"><Building2 className="mr-1.5 h-4 w-4" />Branches & pricing</TabsTrigger>
             </TabsList>
-            <TabsContent value="bookings" className="mt-6">
-              <BusLayoutEditor companyId={companyId} />
-            </TabsContent>
             <TabsContent value="staff" className="mt-6">
               <StaffManager companyId={companyId} />
             </TabsContent>
@@ -85,14 +73,16 @@ const CompanyDashboard = () => {
   );
 };
 
-const Tile = ({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) => (
-  <Card className="card-soft hover-lift">
-    <CardHeader className="flex flex-row items-center gap-3 space-y-0">
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gradient text-primary-foreground shadow-elegant">{icon}</div>
-      <CardTitle className="text-base">{title}</CardTitle>
-    </CardHeader>
-    <CardContent className="text-sm text-muted-foreground">{desc}</CardContent>
-  </Card>
+const Tile = ({ to, icon, title, desc }: { to: string; icon: React.ReactNode; title: string; desc: string }) => (
+  <Link to={to}>
+    <Card className="card-soft hover-lift cursor-pointer h-full">
+      <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gradient text-primary-foreground shadow-elegant">{icon}</div>
+        <CardTitle className="text-base">{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="text-sm text-muted-foreground">{desc}</CardContent>
+    </Card>
+  </Link>
 );
 
 export default CompanyDashboard;

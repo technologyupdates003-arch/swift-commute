@@ -19,6 +19,10 @@ import Offers from "./pages/Offers.tsx";
 import SendParcel from "./pages/SendParcel.tsx";
 import TrackParcel from "./pages/TrackParcel.tsx";
 import Cashier from "./pages/Cashier.tsx";
+import Fleet from "./pages/company/Fleet.tsx";
+import RoutesPage from "./pages/company/Routes.tsx";
+import TripsPage from "./pages/company/Trips.tsx";
+import BookingsPage from "./pages/company/Bookings.tsx";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +46,10 @@ const App = () => (
             <Route path="/track-parcel" element={<TrackParcel />} />
             <Route path="/admin" element={<RequireRole roles={["super_admin"]}><AdminDashboard /></RequireRole>} />
             <Route path="/company" element={<RequireRole roles={["company_admin","cashier","parcel_clerk","driver","conductor"]}><CompanyDashboard /></RequireRole>} />
+            <Route path="/company/fleet" element={<RequireRole roles={["company_admin","super_admin"]}><Fleet /></RequireRole>} />
+            <Route path="/company/routes" element={<RequireRole roles={["company_admin","super_admin"]}><RoutesPage /></RequireRole>} />
+            <Route path="/company/trips" element={<RequireRole roles={["company_admin","super_admin"]}><TripsPage /></RequireRole>} />
+            <Route path="/company/bookings" element={<RequireRole roles={["company_admin","cashier","super_admin"]}><BookingsPage /></RequireRole>} />
             <Route path="/cashier" element={<RequireRole roles={["cashier","company_admin","super_admin"]}><Cashier /></RequireRole>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
