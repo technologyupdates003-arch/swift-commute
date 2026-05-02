@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
         .upsert(payload, { onConflict: "company_id" });
       if (error) throw error;
 
-      const { data: status } = await admin.rpc("get_company_mpesa_status", { _company_id: company_id });
+      const { data: status } = await userClient.rpc("get_company_mpesa_status", { _company_id: company_id });
       return new Response(JSON.stringify({ ok: true, data: status }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
