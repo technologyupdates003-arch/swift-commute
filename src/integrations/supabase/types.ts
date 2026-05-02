@@ -242,6 +242,51 @@ export type Database = {
         }
         Relationships: []
       }
+      company_mpesa_settings: {
+        Row: {
+          business_shortcode: string | null
+          callback_url: string | null
+          company_id: string
+          consumer_key: string | null
+          consumer_secret: string | null
+          created_at: string
+          environment: string
+          id: string
+          is_enabled: boolean
+          party_b: string | null
+          passkey: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_shortcode?: string | null
+          callback_url?: string | null
+          company_id: string
+          consumer_key?: string | null
+          consumer_secret?: string | null
+          created_at?: string
+          environment?: string
+          id?: string
+          is_enabled?: boolean
+          party_b?: string | null
+          passkey?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_shortcode?: string | null
+          callback_url?: string | null
+          company_id?: string
+          consumer_key?: string | null
+          consumer_secret?: string | null
+          created_at?: string
+          environment?: string
+          id?: string
+          is_enabled?: boolean
+          party_b?: string | null
+          passkey?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       discounts: {
         Row: {
           code: string
@@ -817,6 +862,7 @@ export type Database = {
       }
       expire_seat_locks: { Args: never; Returns: number }
       generate_parcel_tracking_id: { Args: never; Returns: string }
+      get_company_mpesa_status: { Args: { _company_id: string }; Returns: Json }
       get_user_company: { Args: { _user_id: string }; Returns: string }
       has_company_role: {
         Args: {

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bus, Map, CalendarClock, Ticket, Tag, Package, Building2, Users } from "lucide-react";
+import { Bus, Map, CalendarClock, Ticket, Tag, Package, Building2, Users, Settings as SettingsIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import DiscountsManager from "@/components/admin/DiscountsManager";
 import ParcelsManager from "@/components/admin/ParcelsManager";
@@ -39,6 +39,7 @@ const CompanyDashboard = () => {
           <Tile to="/company/routes" icon={<Map className="h-5 w-5" />} title="Routes" desc="Origin → destination" />
           <Tile to="/company/trips" icon={<CalendarClock className="h-5 w-5" />} title="Trips" desc="Daily schedules" />
           <Tile to="/company/bookings" icon={<Ticket className="h-5 w-5" />} title="Bookings" desc="Live seat sales" />
+          <Tile to="/company/settings" icon={<SettingsIcon className="h-5 w-5" />} title="Settings" desc="Company & M-Pesa" />
         </div>
 
         {companyId ? (
