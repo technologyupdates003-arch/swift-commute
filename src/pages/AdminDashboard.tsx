@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { Building2, Percent, Plus, Save, Power, Copy, Activity, BarChart3, ScrollText } from "lucide-react";
+import { Building2, Percent, Plus, Save, Power, Copy, Activity, BarChart3, ScrollText, Wallet } from "lucide-react";
 import { z } from "zod";
 
 const companySchema = z.object({
