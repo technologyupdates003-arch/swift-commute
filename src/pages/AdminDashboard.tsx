@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { Building2, Percent, Plus, Save, Power, Copy, Activity, BarChart3, ScrollText } from "lucide-react";
+import { Building2, Percent, Plus, Save, Power, Copy, Activity, BarChart3, ScrollText, Wallet } from "lucide-react";
 import { z } from "zod";
 
 const companySchema = z.object({
@@ -44,10 +44,12 @@ const AdminDashboard = () => {
       <Tabs defaultValue="companies" className="mt-6">
         <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="companies"><Building2 className="mr-1.5 h-4 w-4" />Companies</TabsTrigger>
+          <TabsTrigger value="wallet"><Wallet className="mr-1.5 h-4 w-4" />Platform wallet</TabsTrigger>
           <TabsTrigger value="revenue"><BarChart3 className="mr-1.5 h-4 w-4" />Revenue & analytics</TabsTrigger>
           <TabsTrigger value="audit"><ScrollText className="mr-1.5 h-4 w-4" />Audit logs</TabsTrigger>
         </TabsList>
         <TabsContent value="companies" className="mt-6"><CompaniesTab /></TabsContent>
+        <TabsContent value="wallet" className="mt-6"><WalletTab /></TabsContent>
         <TabsContent value="revenue" className="mt-6"><RevenueTab /></TabsContent>
         <TabsContent value="audit" className="mt-6"><AuditTab /></TabsContent>
       </Tabs>
@@ -223,6 +225,88 @@ const CompaniesTab = () => {
         </DialogContent>
       </Dialog>
     </>
+  );
+};
+
+/* ======================== PLATFORM WALLET ======================== */
+const WalletTab = () => {
+  const [balance, setBalance] = useState<{ balance: number; total_credited: number; updated_at: string } | null>(null);
+  const [txs, setTxs] = useState<any[]>([]);
+  const [companies, setCompanies] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const [{ data: bal }, { data: t }, { data: cs }] = await Promise.all([
+        supabase.from("platform_wallet_balance").select("*").maybeSingle(),
+        supabase.from("platform_wallet_transactions").select("*").order("created_at", { ascending: false }).limit(200),
+        supabase.from("companies").select("id,name"),
+      ]);
+      setBalance(bal as any);
+      setTxs(t ?? []);
+      const map: Record<string, string> = {};
+      (cs ?? []).forEach((c: any) => { map[c.id] = c.name; });
+      setCompanies(map);
+      setLoading(false);
+    })();
+  }, []);
+
+  const fmt = (n: number) => `KES ${Math.round(Number(n || 0)).toLocaleString()}`;
+
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+  const todayTotal = txs.filter(t => new Date(t.created_at) >= today).reduce((s, t) => s + Number(t.commission_amount || 0), 0);
+  const monthTotal = txs.filter(t => new Date(t.created_at) >= monthStart).reduce((s, t) => s + Number(t.commission_amount || 0), 0);
+
+  if (loading) return <div className="text-sm text-muted-foreground">Loading wallet…</div>;
+
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-4">
+        <StatCard title="Available balance" value={fmt(balance?.balance ?? 0)} highlight />
+        <StatCard title="Lifetime credited" value={fmt(balance?.total_credited ?? 0)} />
+        <StatCard title="This month" value={fmt(monthTotal)} />
+        <StatCard title="Today" value={fmt(todayTotal)} />
+      </div>
+
+      <Card className="shadow-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2"><Wallet className="h-5 w-5" />Recent commission credits</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {txs.length === 0 ? (
+            <div className="text-sm text-muted-foreground">No commissions yet. Earnings appear automatically when bookings or parcels are paid.</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="text-left text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="py-2">When</th>
+                    <th>Company</th>
+                    <th>Source</th>
+                    <th>Gross</th>
+                    <th>%</th>
+                    <th className="text-right">Commission</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {txs.map((t) => (
+                    <tr key={t.id}>
+                      <td className="py-2">{new Date(t.created_at).toLocaleString()}</td>
+                      <td className="font-medium">{companies[t.company_id] ?? "—"}</td>
+                      <td><Badge variant="outline" className="capitalize">{t.source_type}</Badge></td>
+                      <td>{fmt(t.gross_amount)}</td>
+                      <td>{Number(t.commission_pct)}%</td>
+                      <td className="text-right font-semibold text-primary">{fmt(t.commission_amount)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -181,9 +181,9 @@ const Index = () => {
 
       {/* Why Choose */}
       <section className="container mt-16">
-        <h2 className="text-2xl font-bold md:text-3xl">Why Choose RoadLink for Bus Ticket Booking?</h2>
+        <h2 className="text-2xl font-bold md:text-3xl">Why Choose Abancool Travel for Bus Ticket Booking?</h2>
         <p className="mt-3 max-w-3xl text-muted-foreground">
-          RoadLink is East Africa's fastest growing online ticket booking platform. RoadLink is the official ticketing
+          Abancool Travel is East Africa's fastest growing online ticket booking platform. Abancool Travel is the official ticketing
           partner of several bus operators and over 200+ private bus partners covering more than 200 bus routes.
         </p>
 
@@ -217,7 +217,7 @@ const Index = () => {
 
       <footer className="mt-16 border-t bg-secondary text-secondary-foreground">
         <div className="container flex flex-col items-center justify-between gap-3 py-6 text-sm md:flex-row">
-          <p>© {new Date().getFullYear()} RoadLink Transport SaaS</p>
+          <p>© {new Date().getFullYear()} Abancool Travel. All rights reserved.</p>
           <p className="opacity-80">Built for modern bus operators</p>
         </div>
       </footer>

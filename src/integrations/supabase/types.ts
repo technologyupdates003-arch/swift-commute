@@ -489,6 +489,60 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_wallet_balance: {
+        Row: {
+          balance: number
+          id: string
+          total_credited: number
+          updated_at: string
+        }
+        Insert: {
+          balance?: number
+          id?: string
+          total_credited?: number
+          updated_at?: string
+        }
+        Update: {
+          balance?: number
+          id?: string
+          total_credited?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      platform_wallet_transactions: {
+        Row: {
+          commission_amount: number
+          commission_pct: number
+          company_id: string | null
+          created_at: string
+          gross_amount: number
+          id: string
+          source_id: string
+          source_type: string
+        }
+        Insert: {
+          commission_amount?: number
+          commission_pct?: number
+          company_id?: string | null
+          created_at?: string
+          gross_amount?: number
+          id?: string
+          source_id: string
+          source_type: string
+        }
+        Update: {
+          commission_amount?: number
+          commission_pct?: number
+          company_id?: string | null
+          created_at?: string
+          gross_amount?: number
+          id?: string
+          source_id?: string
+          source_type?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company_id: string | null
@@ -859,6 +913,16 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      credit_platform_wallet: {
+        Args: {
+          _company_id: string
+          _gross: number
+          _pct: number
+          _source_id: string
+          _source_type: string
+        }
+        Returns: undefined
       }
       expire_seat_locks: { Args: never; Returns: number }
       generate_parcel_tracking_id: { Args: never; Returns: string }
