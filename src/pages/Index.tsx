@@ -217,7 +217,7 @@ const Index = () => {
 
       <footer className="mt-16 border-t bg-secondary text-secondary-foreground">
         <div className="container flex flex-col items-center justify-between gap-3 py-6 text-sm md:flex-row">
-          <p>© {new Date().getFullYear()} RoadLink Transport SaaS</p>
+          <p>© {new Date().getFullYear()} Abancool Travel. All rights reserved.</p>
           <p className="opacity-80">Built for modern bus operators</p>
         </div>
       </footer>
