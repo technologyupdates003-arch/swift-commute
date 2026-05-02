@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "get") {
-      const { data, error } = await admin.rpc("get_company_mpesa_status", { _company_id: company_id });
+      const { data, error } = await userClient.rpc("get_company_mpesa_status", { _company_id: company_id });
       if (error) throw error;
       return new Response(JSON.stringify({ data }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
