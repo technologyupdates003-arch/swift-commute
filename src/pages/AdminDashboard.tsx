@@ -44,10 +44,12 @@ const AdminDashboard = () => {
       <Tabs defaultValue="companies" className="mt-6">
         <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="companies"><Building2 className="mr-1.5 h-4 w-4" />Companies</TabsTrigger>
+          <TabsTrigger value="wallet"><Wallet className="mr-1.5 h-4 w-4" />Platform wallet</TabsTrigger>
           <TabsTrigger value="revenue"><BarChart3 className="mr-1.5 h-4 w-4" />Revenue & analytics</TabsTrigger>
           <TabsTrigger value="audit"><ScrollText className="mr-1.5 h-4 w-4" />Audit logs</TabsTrigger>
         </TabsList>
         <TabsContent value="companies" className="mt-6"><CompaniesTab /></TabsContent>
+        <TabsContent value="wallet" className="mt-6"><WalletTab /></TabsContent>
         <TabsContent value="revenue" className="mt-6"><RevenueTab /></TabsContent>
         <TabsContent value="audit" className="mt-6"><AuditTab /></TabsContent>
       </Tabs>
