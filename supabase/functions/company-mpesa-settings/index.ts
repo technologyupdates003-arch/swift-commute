@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
     }
 
     if (action === "get") {
-      const { data, error } = await admin.rpc("get_company_mpesa_status", { _company_id: company_id });
+      const { data, error } = await userClient.rpc("get_company_mpesa_status", { _company_id: company_id });
       if (error) throw error;
       return new Response(JSON.stringify({ data }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
         .upsert(payload, { onConflict: "company_id" });
       if (error) throw error;
 
-      const { data: status } = await admin.rpc("get_company_mpesa_status", { _company_id: company_id });
+      const { data: status } = await userClient.rpc("get_company_mpesa_status", { _company_id: company_id });
       return new Response(JSON.stringify({ ok: true, data: status }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -111,8 +111,9 @@ Deno.serve(async (req) => {
       status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    const msg = e instanceof Error ? e.message : "Unknown error";
-    return new Response(JSON.stringify({ error: msg }), {
+    console.error("company-mpesa-settings error:", e);
+    const msg = e instanceof Error ? e.message : (typeof e === "string" ? e : JSON.stringify(e));
+    return new Response(JSON.stringify({ error: msg || "Unknown error", detail: String(e) }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
