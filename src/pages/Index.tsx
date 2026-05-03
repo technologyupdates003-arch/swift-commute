@@ -47,7 +47,8 @@ const Index = () => {
 
   useEffect(() => {
     (async () => {
-      const [{ count: c }, { count: r }, { data: d }] = await Promise.all([
+      const nowIso = new Date().toISOString();
+      const [{ count: c }, { count: r }, { data: d }, { data: tr }] = await Promise.all([
         supabase.from("companies").select("*", { count: "exact", head: true }).eq("is_active", true),
         supabase.from("routes").select("*", { count: "exact", head: true }).eq("is_active", true),
         supabase
@@ -56,7 +57,15 @@ const Index = () => {
           .eq("is_active", true)
           .order("created_at", { ascending: false })
           .limit(8),
+        supabase
+          .from("trips")
+          .select("id, departure_at, price, routes(origin,destination), companies(name), buses(bus_type)")
+          .eq("status", "scheduled")
+          .gte("departure_at", nowIso)
+          .order("departure_at", { ascending: true })
+          .limit(6),
       ]);
+      setTrips((tr ?? []) as unknown as TripRow[]);
       setStats({ companies: c ?? 0, routes: r ?? 0 });
       const base = (d ?? []) as Omit<DiscountRow, "companies">[];
       const ids = Array.from(new Set(base.map((x) => x.company_id)));
