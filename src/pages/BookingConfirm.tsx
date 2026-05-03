@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { CheckCircle2, Clock } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { getSessionToken } from "@/lib/sessionToken";
 
 const BookingConfirm = () => {
@@ -26,22 +27,30 @@ const BookingConfirm = () => {
     })();
   }, [id]);
 
-  const simulatePayment = async () => {
+  const [phone, setPhone] = useState("");
+  const payViaMpesa = async () => {
     if (!booking) return;
-    setPaying(true);
-    // Stub: real M-Pesa STK push would go through an edge function;
-    // this RPC verifies the seat lock atomically and marks the booking paid.
-    const { data, error } = await supabase.rpc("confirm_booking_payment", {
-      _booking_id: booking.id,
-      _session_token: getSessionToken(),
-    });
-    setPaying(false);
-    if (error) {
-      toast({ title: "Payment failed", description: error.message, variant: "destructive" });
+    if (!phone || phone.length < 9) {
+      toast({ title: "Phone required", description: "Enter your M-Pesa number", variant: "destructive" });
       return;
     }
-    toast({ title: "Payment confirmed", description: "Seat is now booked." });
-    setBooking({ ...booking, ...(data ?? {}) });
+    setPaying(true);
+    const { data, error } = await supabase.functions.invoke("mpesa-stk-push", {
+      body: { purpose: "booking", booking_id: booking.id, amount: booking.amount, phone },
+    });
+    setPaying(false);
+    if (error || (data as any)?.error) {
+      toast({ title: "STK push failed", description: (data as any)?.error ?? error?.message, variant: "destructive" });
+      return;
+    }
+    toast({ title: "Check your phone", description: "Approve the M-Pesa STK push to confirm your seat." });
+    // Poll booking for paid status
+    const start = Date.now();
+    const tick = setInterval(async () => {
+      const { data: b } = await supabase.from("bookings").select("status").eq("id", booking.id).maybeSingle();
+      if (b?.status === "paid") { clearInterval(tick); setBooking({ ...booking, status: "paid" }); toast({ title: "Payment confirmed" }); }
+      if (Date.now() - start > 90000) clearInterval(tick);
+    }, 3000);
   };
 
   if (!booking) {
