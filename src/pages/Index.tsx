@@ -43,6 +43,7 @@ const Index = () => {
   const [returnDate, setReturnDate] = useState("");
   const [stats, setStats] = useState({ companies: 0, routes: 0 });
   const [offers, setOffers] = useState<DiscountRow[]>([]);
+  const [trips, setTrips] = useState<TripRow[]>([]);
 
   useEffect(() => {
     (async () => {
