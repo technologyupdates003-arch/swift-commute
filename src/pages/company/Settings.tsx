@@ -46,7 +46,7 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
 
   const [form, setForm] = useState({
-    environment: "sandbox",
+    environment: "production",
     business_shortcode: "",
     party_b: "",
     consumer_key: "",
@@ -71,7 +71,7 @@ const Settings = () => {
       if (s) {
         setForm((f) => ({
           ...f,
-          environment: s.environment ?? "sandbox",
+          environment: "production",
           business_shortcode: s.business_shortcode ?? "",
           party_b: s.party_b ?? "",
           callback_url: s.callback_url ?? "",
@@ -129,7 +129,7 @@ const Settings = () => {
       if (error) throw error;
       setStatus(null);
       setForm({
-        environment: "sandbox", business_shortcode: "", party_b: "",
+        environment: "production", business_shortcode: "", party_b: "",
         consumer_key: "", consumer_secret: "", passkey: "",
         callback_url: "", is_enabled: false,
       });
@@ -224,13 +224,8 @@ const Settings = () => {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <Label>Environment</Label>
-                    <Select value={form.environment} onValueChange={(v) => setForm({ ...form, environment: v })} disabled={!isAdmin}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="sandbox">Sandbox (testing)</SelectItem>
-                        <SelectItem value="production">Production (live)</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input value="Production (live)" disabled />
+                    <p className="text-[11px] text-muted-foreground">All STK pushes run on Safaricom production. No sandbox.</p>
                   </div>
                   <div className="space-y-1.5">
                     <Label>Business shortcode (Paybill / Till)</Label>

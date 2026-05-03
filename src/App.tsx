@@ -24,6 +24,7 @@ import RoutesPage from "./pages/company/Routes.tsx";
 import TripsPage from "./pages/company/Trips.tsx";
 import BookingsPage from "./pages/company/Bookings.tsx";
 import CompanySettings from "./pages/company/Settings.tsx";
+import Account from "./pages/Account.tsx";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/company/trips" element={<RequireRole roles={["company_admin","super_admin"]}><TripsPage /></RequireRole>} />
             <Route path="/company/bookings" element={<RequireRole roles={["company_admin","cashier","super_admin"]}><BookingsPage /></RequireRole>} />
             <Route path="/company/settings" element={<RequireRole roles={["company_admin","super_admin"]}><CompanySettings /></RequireRole>} />
+            <Route path="/account" element={<Account />} />
             <Route path="/cashier" element={<RequireRole roles={["cashier","company_admin","super_admin"]}><Cashier /></RequireRole>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -19,6 +19,15 @@ type DiscountRow = {
   companies?: { name: string; slug: string } | null;
 };
 
+type TripRow = {
+  id: string;
+  departure_at: string;
+  price: number;
+  routes: { origin: string; destination: string } | null;
+  companies: { name: string } | null;
+  buses: { bus_type: string } | null;
+};
+
 const OFFER_TINTS = [
   "from-orange-400 via-rose-500 to-rose-600",
   "from-sky-500 via-blue-600 to-indigo-700",
@@ -34,10 +43,12 @@ const Index = () => {
   const [returnDate, setReturnDate] = useState("");
   const [stats, setStats] = useState({ companies: 0, routes: 0 });
   const [offers, setOffers] = useState<DiscountRow[]>([]);
+  const [trips, setTrips] = useState<TripRow[]>([]);
 
   useEffect(() => {
     (async () => {
-      const [{ count: c }, { count: r }, { data: d }] = await Promise.all([
+      const nowIso = new Date().toISOString();
+      const [{ count: c }, { count: r }, { data: d }, { data: tr }] = await Promise.all([
         supabase.from("companies").select("*", { count: "exact", head: true }).eq("is_active", true),
         supabase.from("routes").select("*", { count: "exact", head: true }).eq("is_active", true),
         supabase
@@ -46,7 +57,15 @@ const Index = () => {
           .eq("is_active", true)
           .order("created_at", { ascending: false })
           .limit(8),
+        supabase
+          .from("trips")
+          .select("id, departure_at, price, routes(origin,destination), companies(name), buses(bus_type)")
+          .eq("status", "scheduled")
+          .gte("departure_at", nowIso)
+          .order("departure_at", { ascending: true })
+          .limit(6),
       ]);
+      setTrips((tr ?? []) as unknown as TripRow[]);
       setStats({ companies: c ?? 0, routes: r ?? 0 });
       const base = (d ?? []) as Omit<DiscountRow, "companies">[];
       const ids = Array.from(new Set(base.map((x) => x.company_id)));
@@ -128,6 +147,46 @@ const Index = () => {
           </Link>
         </section>
       )}
+
+      {/* Upcoming buses */}
+      <section className="container mt-10">
+        <div className="flex items-end justify-between">
+          <div>
+            <h2 className="text-2xl font-bold md:text-3xl">Upcoming buses</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Live trips from our partner operators</p>
+          </div>
+          <Link to="/search" className="text-sm font-semibold text-primary hover:underline">See all</Link>
+        </div>
+        {trips.length === 0 ? (
+          <p className="mt-5 rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
+            No scheduled trips right now. Check back soon or use search above.
+          </p>
+        ) : (
+          <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {trips.map((t) => {
+              const dt = new Date(t.departure_at);
+              return (
+                <Link key={t.id} to={`/book/${t.id}`}>
+                  <Card className="h-full shadow-card transition hover:shadow-elegant">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-bold text-secondary">{t.companies?.name ?? "Operator"}</div>
+                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase text-primary">{t.buses?.bus_type ?? "normal"}</span>
+                      </div>
+                      <div className="mt-2 text-base font-semibold">{t.routes?.origin} → {t.routes?.destination}</div>
+                      <div className="mt-1 text-xs text-muted-foreground">{dt.toLocaleString()}</div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="text-xs text-muted-foreground">From</div>
+                        <div className="text-xl font-extrabold text-primary">KES {Number(t.price).toLocaleString()}</div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </section>
 
       {/* Offers for you */}
       <section className="container mt-12">
