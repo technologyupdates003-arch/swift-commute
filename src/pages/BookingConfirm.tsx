@@ -89,9 +89,13 @@ const BookingConfirm = () => {
             <Row k="Amount" v={`KES ${Number(booking.amount).toLocaleString()}`} />
             <Row k="Status" v={<Badge variant={isPaid ? "default" : "secondary"} className={isPaid ? "bg-success" : ""}>{booking.status}</Badge>} />
             {!isPaid && (
-              <Button className="mt-2 w-full bg-brand-gradient hover:opacity-90" size="lg" onClick={simulatePayment} disabled={paying}>
-                {paying ? "Processing…" : "Simulate M-Pesa payment"}
-              </Button>
+              <div className="mt-2 space-y-2">
+                <label className="text-xs text-muted-foreground">M-Pesa phone</label>
+                <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="07XXXXXXXX" />
+                <Button className="w-full bg-brand-gradient hover:opacity-90" size="lg" onClick={payViaMpesa} disabled={paying}>
+                  {paying ? "Sending STK push…" : `Pay KES ${Number(booking.amount).toLocaleString()} via M-Pesa`}
+                </Button>
+              </div>
             )}
             <Link to="/"><Button variant="outline" className="w-full">Back to home</Button></Link>
           </CardContent>
