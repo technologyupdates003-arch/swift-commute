@@ -335,6 +335,66 @@ export type Database = {
         }
         Relationships: []
       }
+      mpesa_stk_requests: {
+        Row: {
+          account_reference: string | null
+          amount: number
+          checkout_request_id: string | null
+          company_id: string
+          created_at: string
+          id: string
+          merchant_request_id: string | null
+          mpesa_receipt: string | null
+          phone: string
+          purpose: string
+          raw_callback: Json | null
+          reference_id: string | null
+          result_code: number | null
+          result_desc: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          account_reference?: string | null
+          amount: number
+          checkout_request_id?: string | null
+          company_id: string
+          created_at?: string
+          id?: string
+          merchant_request_id?: string | null
+          mpesa_receipt?: string | null
+          phone: string
+          purpose: string
+          raw_callback?: Json | null
+          reference_id?: string | null
+          result_code?: number | null
+          result_desc?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          account_reference?: string | null
+          amount?: number
+          checkout_request_id?: string | null
+          company_id?: string
+          created_at?: string
+          id?: string
+          merchant_request_id?: string | null
+          mpesa_receipt?: string | null
+          phone?: string
+          purpose?: string
+          raw_callback?: Json | null
+          reference_id?: string | null
+          result_code?: number | null
+          result_desc?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       parcel_movements: {
         Row: {
           actor_id: string | null
@@ -831,6 +891,60 @@ export type Database = {
           },
         ]
       }
+      user_wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          meta: Json | null
+          reference: string | null
+          source: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          reference?: string | null
+          source: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          reference?: string | null
+          source?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -923,6 +1037,26 @@ export type Database = {
           _source_type: string
         }
         Returns: undefined
+      }
+      credit_user_wallet: {
+        Args: {
+          _amount: number
+          _meta?: Json
+          _reference?: string
+          _source: string
+          _user: string
+        }
+        Returns: number
+      }
+      debit_user_wallet: {
+        Args: {
+          _amount: number
+          _meta?: Json
+          _reference?: string
+          _source: string
+          _user: string
+        }
+        Returns: number
       }
       expire_seat_locks: { Args: never; Returns: number }
       generate_parcel_tracking_id: { Args: never; Returns: string }
