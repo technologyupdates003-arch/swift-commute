@@ -19,6 +19,15 @@ type DiscountRow = {
   companies?: { name: string; slug: string } | null;
 };
 
+type TripRow = {
+  id: string;
+  departure_at: string;
+  price: number;
+  routes: { origin: string; destination: string } | null;
+  companies: { name: string } | null;
+  buses: { bus_type: string } | null;
+};
+
 const OFFER_TINTS = [
   "from-orange-400 via-rose-500 to-rose-600",
   "from-sky-500 via-blue-600 to-indigo-700",
