@@ -148,6 +148,46 @@ const Index = () => {
         </section>
       )}
 
+      {/* Upcoming buses */}
+      <section className="container mt-10">
+        <div className="flex items-end justify-between">
+          <div>
+            <h2 className="text-2xl font-bold md:text-3xl">Upcoming buses</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Live trips from our partner operators</p>
+          </div>
+          <Link to="/search" className="text-sm font-semibold text-primary hover:underline">See all</Link>
+        </div>
+        {trips.length === 0 ? (
+          <p className="mt-5 rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
+            No scheduled trips right now. Check back soon or use search above.
+          </p>
+        ) : (
+          <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {trips.map((t) => {
+              const dt = new Date(t.departure_at);
+              return (
+                <Link key={t.id} to={`/book/${t.id}`}>
+                  <Card className="h-full shadow-card transition hover:shadow-elegant">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-bold text-secondary">{t.companies?.name ?? "Operator"}</div>
+                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase text-primary">{t.buses?.bus_type ?? "normal"}</span>
+                      </div>
+                      <div className="mt-2 text-base font-semibold">{t.routes?.origin} → {t.routes?.destination}</div>
+                      <div className="mt-1 text-xs text-muted-foreground">{dt.toLocaleString()}</div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="text-xs text-muted-foreground">From</div>
+                        <div className="text-xl font-extrabold text-primary">KES {Number(t.price).toLocaleString()}</div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
       {/* Offers for you */}
       <section className="container mt-12">
         <div className="flex items-end justify-between">
