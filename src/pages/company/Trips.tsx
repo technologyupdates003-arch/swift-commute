@@ -10,11 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
-import { CalendarClock, Plus, Trash2, Pencil } from "lucide-react";
+import { CalendarClock, Plus, Trash2, Pencil, Repeat } from "lucide-react";
 
 interface TripRow {
   id: string; price: number; departure_at: string; bus_id: string; route_id: string; status: string;
+  is_daily: boolean;
   buses: { plate_number: string } | null;
   routes: { origin: string; destination: string } | null;
 }
