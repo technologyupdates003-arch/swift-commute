@@ -142,6 +142,13 @@ const TripsPage = () => {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="flex items-center justify-between rounded-lg border p-3">
+                  <div className="space-y-0.5">
+                    <Label className="flex items-center gap-1.5"><Repeat className="h-4 w-4" /> Repeat daily</Label>
+                    <p className="text-xs text-muted-foreground">Auto-creates this trip every day at the same time. No need to reschedule.</p>
+                  </div>
+                  <Switch checked={isDaily} onCheckedChange={setIsDaily} />
+                </div>
               </div>
               <DialogFooter><Button onClick={save}>Save</Button></DialogFooter>
             </DialogContent>
