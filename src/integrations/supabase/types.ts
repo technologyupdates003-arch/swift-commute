@@ -810,7 +810,9 @@ export type Database = {
           company_id: string
           created_at: string
           departure_at: string
+          departure_time: string | null
           id: string
+          is_daily: boolean
           price: number
           route_id: string
           status: Database["public"]["Enums"]["trip_status"]
@@ -820,7 +822,9 @@ export type Database = {
           company_id: string
           created_at?: string
           departure_at: string
+          departure_time?: string | null
           id?: string
+          is_daily?: boolean
           price: number
           route_id: string
           status?: Database["public"]["Enums"]["trip_status"]
@@ -830,7 +834,9 @@ export type Database = {
           company_id?: string
           created_at?: string
           departure_at?: string
+          departure_time?: string | null
           id?: string
+          is_daily?: boolean
           price?: number
           route_id?: string
           status?: Database["public"]["Enums"]["trip_status"]
@@ -1144,6 +1150,7 @@ export type Database = {
         Args: { _seat_id: string; _session_token: string; _trip_id: string }
         Returns: undefined
       }
+      roll_daily_trips: { Args: never; Returns: number }
       track_parcel: { Args: { _tracking_id: string }; Returns: Json }
       update_parcel_status: {
         Args: {
