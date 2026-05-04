@@ -35,6 +35,7 @@ const TripsPage = () => {
   const [departure, setDeparture] = useState("");
   const [price, setPrice] = useState(0);
   const [status, setStatus] = useState("scheduled");
+  const [isDaily, setIsDaily] = useState(false);
 
   const load = async () => {
     if (!companyId) return;
@@ -49,16 +50,23 @@ const TripsPage = () => {
   };
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [companyId]);
 
-  const reset = () => { setEditing(null); setRouteId(""); setBusId(""); setDeparture(""); setPrice(0); setStatus("scheduled"); };
+  const reset = () => { setEditing(null); setRouteId(""); setBusId(""); setDeparture(""); setPrice(0); setStatus("scheduled"); setIsDaily(false); };
   const openEdit = (t: TripRow) => {
     setEditing(t); setRouteId(t.route_id); setBusId(t.bus_id);
     setDeparture(new Date(t.departure_at).toISOString().slice(0, 16));
-    setPrice(Number(t.price)); setStatus(t.status); setOpen(true);
+    setPrice(Number(t.price)); setStatus(t.status); setIsDaily(!!t.is_daily); setOpen(true);
   };
 
   const save = async () => {
     if (!companyId || !routeId || !busId || !departure) return toast({ title: "Fill all fields", variant: "destructive" });
-    const payload = { route_id: routeId, bus_id: busId, departure_at: new Date(departure).toISOString(), price, status: status as any };
+    const dep = new Date(departure);
+    const hh = String(dep.getHours()).padStart(2, "0");
+    const mm = String(dep.getMinutes()).padStart(2, "0");
+    const payload: any = {
+      route_id: routeId, bus_id: busId, departure_at: dep.toISOString(),
+      price, status: status as any, is_daily: isDaily,
+      departure_time: `${hh}:${mm}:00`,
+    };
     if (editing) {
       const { error } = await supabase.from("trips").update(payload).eq("id", editing.id);
       if (error) return toast({ title: "Failed", description: error.message, variant: "destructive" });
@@ -66,7 +74,7 @@ const TripsPage = () => {
     } else {
       const { error } = await supabase.from("trips").insert({ ...payload, company_id: companyId });
       if (error) return toast({ title: "Failed", description: error.message, variant: "destructive" });
-      toast({ title: "Trip scheduled" });
+      toast({ title: isDaily ? "Daily trip scheduled — auto-rolls each day" : "Trip scheduled" });
     }
     setOpen(false); reset(); load();
   };
