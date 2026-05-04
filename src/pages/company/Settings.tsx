@@ -13,6 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Loader2, Save, ShieldCheck, ShieldAlert, Smartphone, Building2 } from "lucide-react";
+import BlogManager from "@/components/admin/BlogManager";
+import ApiKeysManager from "@/components/admin/ApiKeysManager";
 
 interface MpesaStatus {
   configured: boolean;
@@ -276,6 +278,9 @@ const Settings = () => {
                 )}
               </CardContent>
             </Card>
+
+            {isAdmin && <ApiKeysManager scope="company" />}
+            {isAdmin && <BlogManager scope="company" />}
           </>
         )}
       </div>
