@@ -172,6 +172,7 @@ const TripsPage = () => {
                     </div>
                     <div className="text-sm font-mono">KES {Number(t.price).toLocaleString()}</div>
                     <Badge variant="secondary" className="capitalize">{t.status}</Badge>
+                    {t.is_daily && <Badge className="gap-1"><Repeat className="h-3 w-3" /> Daily</Badge>}
                     <Button size="sm" variant="ghost" onClick={() => openEdit(t)}><Pencil className="h-4 w-4" /></Button>
                     <Button size="sm" variant="ghost" onClick={() => remove(t)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                   </div>
