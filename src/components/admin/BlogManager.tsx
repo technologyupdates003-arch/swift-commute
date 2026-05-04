@@ -70,9 +70,12 @@ export default function BlogManager({ scope }: { scope: "super" | "company" }) {
     if (!user) return;
     setBusy(true);
     const payload = {
-      ...parsed.data,
+      title: parsed.data.title,
+      slug: parsed.data.slug,
+      content: parsed.data.content,
       excerpt: parsed.data.excerpt || null,
       cover_url: parsed.data.cover_url || null,
+      is_published: parsed.data.is_published,
       author_id: user.id,
       company_id: scope === "company" ? companyId : null,
       published_at: parsed.data.is_published ? new Date().toISOString() : null,
@@ -81,7 +84,7 @@ export default function BlogManager({ scope }: { scope: "super" | "company" }) {
     if (editingId) {
       ({ error: err } = await supabase.from("blog_posts").update(payload).eq("id", editingId));
     } else {
-      ({ error: err } = await supabase.from("blog_posts").insert([payload]));
+      ({ error: err } = await supabase.from("blog_posts").insert(payload as never));
     }
     setBusy(false);
     if (err) { toast.error(err.message); return; }
