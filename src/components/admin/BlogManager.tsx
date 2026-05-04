@@ -81,7 +81,7 @@ export default function BlogManager({ scope }: { scope: "super" | "company" }) {
     if (editingId) {
       ({ error: err } = await supabase.from("blog_posts").update(payload).eq("id", editingId));
     } else {
-      ({ error: err } = await supabase.from("blog_posts").insert(payload));
+      ({ error: err } = await supabase.from("blog_posts").insert([payload]));
     }
     setBusy(false);
     if (err) { toast.error(err.message); return; }
