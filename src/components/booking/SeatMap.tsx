@@ -101,22 +101,24 @@ const SeatMap = ({ seats, tripId, selectedSeatIds, onToggle, sessionToken, maxSe
       </div>
 
       {/* Bus body */}
-      <div className="mx-auto w-fit rounded-2xl border-2 border-muted bg-background p-4 shadow-card">
-        <div className="mb-3 flex items-center justify-between">
-          <span className="rounded-md bg-muted px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Driver</span>
-          <span className="rounded-md bg-muted px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Door</span>
+      <div className="mx-auto w-fit rounded-[2rem] border-2 border-primary/40 bg-zinc-900 p-5 shadow-2xl">
+        <div className="mb-4 flex items-center justify-between gap-6">
+          <span className="flex items-center gap-2 rounded-full bg-zinc-800 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-200">
+            <span className="inline-block h-3 w-3 rounded-full border-2 border-primary" /> Driver
+          </span>
+          <div className="h-1 flex-1 rounded-full bg-zinc-800" />
+          <span className="rounded-full bg-zinc-800 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-zinc-200">Door</span>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {rows.map(([rowIndex, rowSeats]) => (
             <div key={rowIndex} className="flex items-center gap-2">
-              <span className="w-5 text-right text-[10px] font-bold text-muted-foreground">{rowIndex}</span>
+              <span className="w-6 text-right text-[11px] font-extrabold text-zinc-400">{rowIndex}</span>
               <div className="flex flex-1 items-center gap-2">
                 {Array.from({ length: maxCol }).map((_, i) => {
                   const colIndex = i + 1;
                   const seat = rowSeats.find((s) => s.col_index === colIndex);
-                  // Aisle = empty cell roughly in the middle (or wherever no seat is defined)
-                  if (!seat) return <div key={colIndex} className="h-11 w-11 shrink-0" />;
+                  if (!seat) return <div key={colIndex} className="h-12 w-12 shrink-0" />;
 
                   const isBooked = booked.has(seat.id);
                   const lock = lockMap.get(seat.id);
@@ -135,21 +137,21 @@ const SeatMap = ({ seats, tripId, selectedSeatIds, onToggle, sessionToken, maxSe
                       title={`${seat.seat_number} • ${seat.class.toUpperCase()}`}
                       aria-pressed={isSelected}
                       className={cn(
-                        "relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold transition-transform",
-                        "ring-2 ring-inset",
+                        "relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-sm font-extrabold tracking-tight transition-all",
+                        "ring-2 ring-inset shadow-md",
                         !isBooked && !isLockedByOther && CLASS_BG[seat.class],
-                        isLockedByOther && "cursor-not-allowed bg-yellow-300 text-yellow-900 ring-yellow-500",
-                        isBooked && "cursor-not-allowed bg-muted-foreground/40 text-background ring-muted-foreground/40 line-through",
-                        isSelected && "scale-105 bg-secondary text-secondary-foreground shadow-elegant ring-secondary",
-                        !disabled && !isSelected && "hover:scale-105"
+                        isLockedByOther && "cursor-not-allowed bg-yellow-400 text-yellow-950 ring-yellow-600",
+                        isBooked && "cursor-not-allowed bg-zinc-700 text-zinc-400 ring-zinc-600 line-through",
+                        isSelected && "scale-110 bg-primary text-primary-foreground shadow-[0_0_0_3px_hsl(var(--primary)/0.4)] ring-primary",
+                        !disabled && !isSelected && "hover:scale-110"
                       )}
                     >
-                      {seat.seat_number}
+                      <span className="drop-shadow-sm">{seat.seat_number}</span>
                       {seat.class === "vip" && (
-                        <span className="absolute -top-1 -right-1 rounded-full bg-amber-500 px-1 text-[8px] font-extrabold text-white">V</span>
+                        <span className="absolute -top-1.5 -right-1.5 rounded-full bg-amber-500 px-1 text-[9px] font-extrabold text-white ring-2 ring-zinc-900">V</span>
                       )}
                       {seat.class === "business" && (
-                        <span className="absolute -top-1 -right-1 rounded-full bg-rose-500 px-1 text-[8px] font-extrabold text-white">B</span>
+                        <span className="absolute -top-1.5 -right-1.5 rounded-full bg-rose-500 px-1 text-[9px] font-extrabold text-white ring-2 ring-zinc-900">B</span>
                       )}
                     </button>
                   );
@@ -160,10 +162,14 @@ const SeatMap = ({ seats, tripId, selectedSeatIds, onToggle, sessionToken, maxSe
         </div>
 
         {seats.length === 0 && (
-          <p className="py-12 text-center text-sm text-muted-foreground">
+          <p className="py-12 text-center text-sm text-zinc-400">
             No seat layout configured for this bus yet.
           </p>
         )}
+
+        <div className="mt-4 flex justify-center">
+          <span className="rounded-full bg-zinc-800 px-4 py-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400">Rear</span>
+        </div>
       </div>
     </div>
   );
