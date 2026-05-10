@@ -371,6 +371,120 @@ export type Database = {
         }
         Relationships: []
       }
+      company_wallet_transactions: {
+        Row: {
+          amount: number
+          commission_amount: number | null
+          company_id: string
+          created_at: string
+          gross_amount: number | null
+          id: string
+          note: string | null
+          source: string
+          source_id: string | null
+          type: string
+        }
+        Insert: {
+          amount: number
+          commission_amount?: number | null
+          company_id: string
+          created_at?: string
+          gross_amount?: number | null
+          id?: string
+          note?: string | null
+          source: string
+          source_id?: string | null
+          type: string
+        }
+        Update: {
+          amount?: number
+          commission_amount?: number | null
+          company_id?: string
+          created_at?: string
+          gross_amount?: number | null
+          id?: string
+          note?: string | null
+          source?: string
+          source_id?: string | null
+          type?: string
+        }
+        Relationships: []
+      }
+      company_wallets: {
+        Row: {
+          balance: number
+          company_id: string
+          created_at: string
+          id: string
+          total_credited: number
+          total_withdrawn: number
+          updated_at: string
+        }
+        Insert: {
+          balance?: number
+          company_id: string
+          created_at?: string
+          id?: string
+          total_credited?: number
+          total_withdrawn?: number
+          updated_at?: string
+        }
+        Update: {
+          balance?: number
+          company_id?: string
+          created_at?: string
+          id?: string
+          total_credited?: number
+          total_withdrawn?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      company_withdrawals: {
+        Row: {
+          amount: number
+          company_id: string
+          created_at: string
+          destination: string
+          id: string
+          method: string
+          note: string | null
+          processed_by: string | null
+          reference: string | null
+          requested_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          company_id: string
+          created_at?: string
+          destination: string
+          id?: string
+          method?: string
+          note?: string | null
+          processed_by?: string | null
+          reference?: string | null
+          requested_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          company_id?: string
+          created_at?: string
+          destination?: string
+          id?: string
+          method?: string
+          note?: string | null
+          processed_by?: string | null
+          reference?: string | null
+          requested_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       discounts: {
         Row: {
           code: string
@@ -1122,6 +1236,16 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      credit_company_wallet: {
+        Args: {
+          _company_id: string
+          _gross: number
+          _pct: number
+          _source_id: string
+          _source_type: string
+        }
+        Returns: undefined
+      }
       credit_platform_wallet: {
         Args: {
           _company_id: string
@@ -1234,9 +1358,65 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      process_company_withdrawal: {
+        Args: {
+          _new_status: string
+          _reference?: string
+          _withdrawal_id: string
+        }
+        Returns: {
+          amount: number
+          company_id: string
+          created_at: string
+          destination: string
+          id: string
+          method: string
+          note: string | null
+          processed_by: string | null
+          reference: string | null
+          requested_by: string | null
+          status: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "company_withdrawals"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       release_seat_lock: {
         Args: { _seat_id: string; _session_token: string; _trip_id: string }
         Returns: undefined
+      }
+      request_company_withdrawal: {
+        Args: {
+          _amount: number
+          _company_id: string
+          _destination: string
+          _method: string
+          _note?: string
+        }
+        Returns: {
+          amount: number
+          company_id: string
+          created_at: string
+          destination: string
+          id: string
+          method: string
+          note: string | null
+          processed_by: string | null
+          reference: string | null
+          requested_by: string | null
+          status: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "company_withdrawals"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       revoke_api_key: { Args: { _id: string }; Returns: undefined }
       roll_daily_trips: { Args: never; Returns: number }
