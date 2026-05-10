@@ -24,6 +24,7 @@ import RoutesPage from "./pages/company/Routes.tsx";
 import TripsPage from "./pages/company/Trips.tsx";
 import BookingsPage from "./pages/company/Bookings.tsx";
 import CompanySettings from "./pages/company/Settings.tsx";
+import CompanyWalletPage from "./pages/company/Wallet.tsx";
 import Account from "./pages/Account.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
