@@ -57,6 +57,7 @@ const App = () => (
             <Route path="/company/trips" element={<RequireRole roles={["company_admin","super_admin"]}><TripsPage /></RequireRole>} />
             <Route path="/company/bookings" element={<RequireRole roles={["company_admin","cashier","super_admin"]}><BookingsPage /></RequireRole>} />
             <Route path="/company/settings" element={<RequireRole roles={["company_admin","super_admin"]}><CompanySettings /></RequireRole>} />
+            <Route path="/company/wallet" element={<RequireRole roles={["company_admin","super_admin"]}><CompanyWalletPage /></RequireRole>} />
             <Route path="/account" element={<Account />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
