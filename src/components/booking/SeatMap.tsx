@@ -26,9 +26,9 @@ interface Props {
 }
 
 const CLASS_BG: Record<SeatClass, string> = {
-  economy:  "bg-sky-100 hover:bg-sky-200 text-sky-900 ring-sky-300",
-  business: "bg-rose-100 hover:bg-rose-200 text-rose-900 ring-rose-300",
-  vip:      "bg-amber-100 hover:bg-amber-200 text-amber-900 ring-amber-300",
+  economy:  "bg-sky-200 hover:bg-sky-300 text-slate-900 ring-sky-500",
+  business: "bg-rose-200 hover:bg-rose-300 text-slate-900 ring-rose-500",
+  vip:      "bg-amber-200 hover:bg-amber-300 text-slate-900 ring-amber-500",
 };
 
 const SeatMap = ({ seats, tripId, selectedSeatIds, onToggle, sessionToken, maxSelectable = 4 }: Props) => {
