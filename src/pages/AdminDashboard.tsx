@@ -51,6 +51,7 @@ const AdminDashboard = () => {
           <TabsTrigger value="revenue"><BarChart3 className="mr-1.5 h-4 w-4" />Revenue & analytics</TabsTrigger>
           <TabsTrigger value="blog"><FileText className="mr-1.5 h-4 w-4" />Blog</TabsTrigger>
           <TabsTrigger value="apikeys"><KeyRound className="mr-1.5 h-4 w-4" />API keys</TabsTrigger>
+          <TabsTrigger value="withdrawals"><Wallet className="mr-1.5 h-4 w-4" />Withdrawals</TabsTrigger>
           <TabsTrigger value="audit"><ScrollText className="mr-1.5 h-4 w-4" />Audit logs</TabsTrigger>
         </TabsList>
         <TabsContent value="companies" className="mt-6"><CompaniesTab /></TabsContent>
@@ -58,6 +59,7 @@ const AdminDashboard = () => {
         <TabsContent value="revenue" className="mt-6"><RevenueTab /></TabsContent>
         <TabsContent value="blog" className="mt-6"><BlogManager scope="super" /></TabsContent>
         <TabsContent value="apikeys" className="mt-6"><ApiKeysManager scope="super" /></TabsContent>
+        <TabsContent value="withdrawals" className="mt-6"><WithdrawalsManager /></TabsContent>
         <TabsContent value="audit" className="mt-6"><AuditTab /></TabsContent>
       </Tabs>
     </DashboardShell>
