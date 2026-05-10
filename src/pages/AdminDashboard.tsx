@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { Building2, Percent, Plus, Save, Power, Copy, Activity, BarChart3, ScrollText, Wallet, FileText, KeyRound } from "lucide-react";
 import BlogManager from "@/components/admin/BlogManager";
 import ApiKeysManager from "@/components/admin/ApiKeysManager";
+import WithdrawalsManager from "@/components/admin/WithdrawalsManager";
 import { z } from "zod";
 
 const companySchema = z.object({
